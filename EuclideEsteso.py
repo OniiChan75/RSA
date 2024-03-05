@@ -1,11 +1,21 @@
-def euclide_esteso(a, b):
+def euclide_esteso_funzionante(a, b):
     a, b = abs(a), abs(b)
-    x0, x1, y0, y1 = 1, 0, 0, 1
-    while b != 0:
-        q, a, b = a // b, b, a % b
-        x0, x1 = x1, x0 - q * x1
-        y0, y1 = y1, y0 - q * y1
-    return a, x0, y0
+    #sono quattro liste
+    q = [None]
+    r = [a, b]
+    x = [1, 0]
+    y = [0, 1]
+    flag = False
+    q.append(a//b)
+    #il '-' in una lista la legge al contrario
+    while(r[-1] != 0):
+        q.append(r[-2]//r[-1])
+        r.append(r[-2]-q[-1]*r[-1])
+        x.append(x[-2] - q[-1] * x[-1])
+        y.append(y[-2] - q[-1] * y[-1])
+    if(r[-2] == 1):
+        flag = True
+    return flag, x[-2], y[-2]
 
 
 def euclide(a, b):
@@ -30,9 +40,14 @@ if __name__ == '__main__':
             print(euclide(b, a))
     elif sc == 2:
         # funzione euclide esteso
-        a = int(input("Inserisci il primo numero: "))
-        b = int(input("Inserisci il primo numero: "))
-        if a > b:
-            print(euclide_esteso(a, b))
+        chiave_privata = int(input("Inserisci il primo numero: "))
+        p = int(input("Inserisci un numero primo: "))
+        q = int(input("ancora un altro: "))
+        phi = (p - 1) * (q - 1)
+        #a -> chiave privata, x -> chiave pubblica
+        flag, x, y = euclide_esteso_funzionante(chiave_privata, phi)
+        if(flag):
+            print(x, y)
+            print(f"{chiave_privata}*{x}+{phi}*{y} = {chiave_privata*x+phi*y}")
         else:
-            print(euclide_esteso(b, a))
+            print("flag = false")
